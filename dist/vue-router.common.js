@@ -1961,14 +1961,16 @@ var HashHistory = (function (History$$1) {
   HashHistory.prototype.setupListeners = function setupListeners () {
     var this$1 = this;
 
-    window.addEventListener('hashchange', function () {
+    var hashEvent = function () {
       if (!ensureSlash()) {
         return
       }
       this$1.transitionTo(getHash(), function (route) {
         replaceHash(route.fullPath);
       });
-    });
+    };
+    window.removeEventListener('hashchange', hashEvent);
+    window.addEventListener('hashchange', hashEvent);
   };
 
   HashHistory.prototype.push = function push (location, onComplete, onAbort) {

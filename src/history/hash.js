@@ -18,14 +18,16 @@ export class HashHistory extends History {
   // this is delayed until the app mounts
   // to avoid the hashchange listener being fired too early
   setupListeners () {
-    window.addEventListener('hashchange', () => {
+    const hashEvent = () => {
       if (!ensureSlash()) {
         return
       }
       this.transitionTo(getHash(), route => {
         replaceHash(route.fullPath)
       })
-    })
+    }
+    window.removeEventListener('hashchange', hashEvent)
+    window.addEventListener('hashchange', hashEvent)
   }
 
   push (location: RawLocation, onComplete?: Function, onAbort?: Function) {
