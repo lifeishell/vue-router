@@ -1,6 +1,6 @@
 /**
   * vue-router v3.0.1
-  * (c) 2017 Evan You
+  * (c) 2018 Evan You
   * @license MIT
   */
 'use strict';
@@ -2251,20 +2251,22 @@ var HashHistory = (function (History$$1) {
       setupScroll();
     }
 
-    window.addEventListener(supportsPushState ? 'popstate' : 'hashchange', function () {
-      var current = this$1.current;
-      if (!ensureSlash()) {
-        return
-      }
-      this$1.transitionTo(getHash(), function (route) {
-        if (supportsScroll) {
-          handleScroll(this$1.router, route, current, true);
+    var hashEvent = function () {
+        var current = this$1.current;
+        if (!ensureSlash()) {
+            return
         }
-        if (!supportsPushState) {
-          replaceHash(route.fullPath);
-        }
-      });
-    });
+        this$1.transitionTo(getHash(), function (route) {
+            if (supportsScroll) {
+                handleScroll(this$1.router, route, current, true);
+            }
+            if (!supportsPushState) {
+                replaceHash(route.fullPath);
+            }
+        });
+    };
+    window.removeEventListener(supportsPushState ? 'popstate' : 'hashchange', hashEvent);
+    window.addEventListener(supportsPushState ? 'popstate' : 'hashchange', hashEvent);
   };
 
   HashHistory.prototype.push = function push (location, onComplete, onAbort) {
