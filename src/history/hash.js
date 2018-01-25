@@ -28,20 +28,22 @@ export class HashHistory extends History {
       setupScroll()
     }
 
-    window.addEventListener(supportsPushState ? 'popstate' : 'hashchange', () => {
-      const current = this.current
-      if (!ensureSlash()) {
-        return
-      }
-      this.transitionTo(getHash(), route => {
-        if (supportsScroll) {
-          handleScroll(this.router, route, current, true)
+    const hashEvent = () => {
+        const current = this.current
+        if (!ensureSlash()) {
+            return
         }
-        if (!supportsPushState) {
-          replaceHash(route.fullPath)
-        }
-      })
-    })
+        this.transitionTo(getHash(), route => {
+            if (supportsScroll) {
+                handleScroll(this.router, route, current, true)
+            }
+            if (!supportsPushState) {
+                replaceHash(route.fullPath)
+            }
+        })
+    }
+    window.removeEventListener(supportsPushState ? 'popstate' : 'hashchange', hashEvent)
+    window.addEventListener(supportsPushState ? 'popstate' : 'hashchange', hashEvent)
   }
 
   push (location: RawLocation, onComplete?: Function, onAbort?: Function) {
