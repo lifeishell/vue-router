@@ -115,17 +115,9 @@ function getUrl (path) {
 }
 
 function pushHash (path) {
-  if (supportsPushState) {
-    pushState(getUrl(path))
-  } else {
-    window.location.hash = path
-  }
+  window.location.hash = path
 }
 
 function replaceHash (path) {
-  if (supportsPushState) {
-    replaceState(getUrl(path))
-  } else {
-    window.location.replace(getUrl(path))
-  }
+  window.location.replace(getUrl(path))
 }
